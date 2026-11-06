@@ -91,32 +91,3 @@ tests/LabToolkit.Tests/                testy xUnit (84), które są też przykł
 
 Dzielenie dla typów całkowitych obcina. `3 / 4 == 0`, więc pisz `3 * n / 4`, a nie `3 / 4 * n`.
 
-### Kwartyle: konwencje (dane 3, 6, 9, …, 3n)
-
-| n | CountBelow Q1, Q3 | NearestRank Q1, Q3 | Linear Q1, Q3 | Halves Q1, Q3 |
-|---|---|---|---|---|
-| 4 | 6, 12 | 3, 9 | 5.25, 9.75 | 4.5, 10.5 |
-| 5 | 6, 12 | 6, 12 | 6, 12 | 4.5, 13.5 |
-| 6 | 6, 15 | 6, 15 | 6.75, 14.25 | 6, 15 |
-| 7 | 6, 18 | 6, 18 | 7.5, 16.5 | 6, 18 |
-| 8 | 9, 21 | 6, 18 | 8.25, 18.75 | 7.5, 19.5 |
-
-- **CountBelow**: `sorted[n/4]`, `sorted[3n/4]`, czyli element, przed którym stoi 1/4 (3/4) elementów.
-- **NearestRank**: `sorted[ceil(n/4) − 1]`.
-- **Linear**: interpolacja jak w Excelu (QUARTILE.INC) i numpy.
-- **Halves**: mediany dolnej i górnej połowy („metoda szkolna”).
-
-Dla nierównomiernych danych konwencje dają bardzo różne wyniki: `[1,2,3,100]` ma rozstęp ćwiartkowy 98 (CountBelow) albo 2 (NearestRank).
-Zanim wybierzesz konwencję, sprawdź na przykładzie z wymagań, która daje oczekiwany wynik.
-
-### LINQ
-
-- **Odroczone** (budują zapytanie): `Where`, `Select`, `OrderBy`, `Join`, `GroupBy`, `Skip`, `Take`, `Distinct`…
-- **Natychmiastowe**: `ToList`, `ToArray`, `ToDictionary`, `ToLookup`, `Count`, `Sum`, `Average`, `First`, `Any`, `All`.
-- Sortowanie jest **stabilne**. Drugie kryterium podajesz przez `ThenBy`, nie przez drugie `OrderBy`.
-- Kolejność w łańcuchu: `Where` → `OrderBy` → `Take` → `Select` (po `Select` nie ma już pól do sortowania).
-- `outer.Join(inner, outerKey, innerKey, (o, i) => wynik)` to inner join: elementy bez pary znikają.
-- `GroupBy(klucz, element)` z drugim argumentem decyduje, co trafia do grupy.
-- `ToLookup` przy brakującym kluczu zwraca pustą sekwencję, a słownik rzuca wyjątek.
-- Pieniądze trzymaj w `decimal`. `int * decimal` daje `decimal`.
-- `Average` zwraca `double` nawet dla `int`. `Aggregate` bez seed rzuca wyjątek na pustej sekwencji.
